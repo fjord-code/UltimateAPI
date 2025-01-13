@@ -26,4 +26,13 @@ public static class ServiceExtensions
 
         return services;
     }
+
+    /// <summary>
+    /// Configures an IIS integration.
+    /// </summary>
+    /// <param name="services">Service collection.</param>
+    public static void ConfigureIISIntegration(this IServiceCollection services)
+    {
+        services.Configure<IISOptions>(options => { });
+    }
 }
