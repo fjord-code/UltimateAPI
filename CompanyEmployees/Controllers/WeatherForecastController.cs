@@ -1,3 +1,4 @@
+using Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CompanyEmployees.Controllers
@@ -10,10 +11,13 @@ namespace CompanyEmployees.Controllers
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
+        
+        /// <summary>
+        /// A logger manager instance.
+        /// </summary>
+        private readonly ILoggerManager _logger;
 
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILoggerManager logger)
         {
             _logger = logger;
         }
@@ -21,6 +25,11 @@ namespace CompanyEmployees.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
+            _logger.LogDebug("Here is the debug message from the weather controller.");
+            _logger.LogInfo("Here is the info message from the weather controller.");
+            _logger.LogWarning("Here is the warning message from the weather controller.");
+            _logger.LogError("Here is the error message from the weather controller.");
+
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),

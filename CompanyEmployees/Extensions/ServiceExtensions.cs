@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Cors.Infrastructure;
+﻿using Contracts;
+using LoggerService;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace CompanyEmployees.Extensions;
 
@@ -34,5 +36,14 @@ public static class ServiceExtensions
     public static void ConfigureIISIntegration(this IServiceCollection services)
     {
         services.Configure<IISOptions>(options => { });
+    }
+
+    /// <summary>
+    /// Configures the logger.
+    /// </summary>
+    /// <param name="services">Service collection.</param>
+    public static void ConfigureLoggerService(this IServiceCollection services) 
+    {
+        services.AddSingleton<ILoggerManager, LoggerManager>();
     }
 }

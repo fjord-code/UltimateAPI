@@ -1,10 +1,14 @@
 using CompanyEmployees.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
+using NLog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+
 builder.Services.ConfigureCORS();
 builder.Services.ConfigureIISIntegration();
+builder.Services.ConfigureLoggerService();
 
 builder.Services.AddControllers();
 
