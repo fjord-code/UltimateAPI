@@ -1,7 +1,10 @@
 ﻿using Contracts;
 using LoggerService;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Repository;
+using Service;
+using Service.Contracts;
 
 namespace CompanyEmployees.Extensions;
 
@@ -52,4 +55,11 @@ public static class ServiceExtensions
     {
         services.AddScoped<IRepositoryManager, RepositoryManager>();
     }
+
+    public static void ConfigureServiceManager(this IServiceCollection services) =>
+        services.AddScoped<IServiceManager, ServiceManager>();
+
+    public static void ConfigureSqlContext(this IServiceCollection services) =>
+        services.AddDbContext<RepositoryContext>(options =>
+            options.UseSqlite(Environment.GetEnvironmentVariable("SqliteConnectionString")));
 }
