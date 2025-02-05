@@ -226,3 +226,5 @@ AppPackages/
 #####
 CompanyEmployees/internal_logs
 *.db
+*.db-shm
+*.db-wal
