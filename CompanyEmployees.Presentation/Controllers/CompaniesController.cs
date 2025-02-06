@@ -21,4 +21,11 @@ public class CompaniesController : ControllerBase
 
         return Ok(companies);
     }
+
+    [HttpGet("{id:guid}")]
+    public IActionResult GetCompany(Guid id)
+    {
+        var companyDto = _service.CompanyService.GetCompany(id, trackChanges: false);
+        return Ok(companyDto);
+    }
 }
