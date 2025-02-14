@@ -62,4 +62,7 @@ public static class ServiceExtensions
     public static void ConfigureSqlContext(this IServiceCollection services) =>
         services.AddDbContext<RepositoryContext>(options =>
             options.UseSqlite(Environment.GetEnvironmentVariable("SqliteConnectionString")));
+
+    public static IMvcBuilder AddCustomCSVFormatter(this IMvcBuilder builder) =>
+        builder.AddMvcOptions(config => config.OutputFormatters.Add(new CsvOutputFormatter()));
 }

@@ -6,7 +6,6 @@ namespace CompanyEmployees.Presentation.Controllers;
 
 [Route("api/companies/{companyid}/[controller]")]
 [ApiController]
-[Produces("application/json")]
 public class EmployeesController : ControllerBase
 {
     private readonly IServiceManager _services;
