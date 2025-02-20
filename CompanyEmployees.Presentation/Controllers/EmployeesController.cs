@@ -36,7 +36,7 @@ public class EmployeesController : ControllerBase
         }
 
         var employeeToReturn = _services.EmployeeService.CreateEmployeeForCompany(companyId, employeeForCreationDto, false);
-        return CreatedAtRoute("GetEmployeeForCompany", new { companyId, id = employeeToReturn.id }, employeeToReturn);
+        return CreatedAtRoute("GetEmployeeForCompany", new { companyId, Id = employeeToReturn.Id }, employeeToReturn);
     }
 
 }
