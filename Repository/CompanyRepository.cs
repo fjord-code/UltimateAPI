@@ -15,6 +15,11 @@ internal sealed class CompanyRepository : RepositoryBase<Company>, ICompanyRepos
         Create(company);
     }
 
+    public void DeleteCompany(Company company)
+    {
+        Delete(company);
+    }
+
     public IEnumerable<Company> GetAllCompanies(bool trackChanges)
     {
         return FindAll(trackChanges)
