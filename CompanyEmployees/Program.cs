@@ -31,8 +31,6 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
-builder.Services.AddControllers();
-
 WebApplication app = builder.Build();
 
 var logger = app.Services.GetRequiredService<ILoggerManager>();
