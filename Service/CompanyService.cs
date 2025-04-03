@@ -63,9 +63,9 @@ internal sealed class CompanyService : ICompanyService
         _repository.Save();
     }
 
-    public IEnumerable<CompanyDto> GetAllCompanies(bool trackChanges)
+    public async Task<IEnumerable<CompanyDto>> GetAllCompaniesAsync(bool trackChanges)
     {
-        var companies = _repository.Company.GetAllCompanies(trackChanges);
+        var companies = await _repository.Company.GetAllCompaniesAsync(trackChanges);
         var companiesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
 
         return companiesDto;
@@ -88,9 +88,9 @@ internal sealed class CompanyService : ICompanyService
         return companiesToReturn;
     }
 
-    public CompanyDto GetCompany(Guid companyId, bool trackChanges)
+    public async Task<CompanyDto> GetCompanyAsync(Guid companyId, bool trackChanges)
     {
-        var company = _repository.Company.GetCompany(companyId, trackChanges);
+        var company = await _repository.Company.GetCompanyAsync(companyId, trackChanges);
         
         if (company is null)
         {
