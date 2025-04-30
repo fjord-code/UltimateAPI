@@ -17,19 +17,19 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetEmployees([FromRoute] Guid companyId)
+    public async Task<IActionResult> GetEmployees([FromRoute] Guid companyId)
     {
-        return Ok(_services.EmployeeService.GetEmployees(companyId, trackChanges: false));
+        return Ok(await _services.EmployeeService.GetEmployeesAsync(companyId, trackChanges: false));
     }
 
     [HttpGet("{id}", Name = "GetEmployeeForCompany")]
-    public IActionResult GetEmployee([FromRoute] Guid companyId, [FromRoute] Guid id)
+    public async Task<IActionResult> GetEmployee([FromRoute] Guid companyId, [FromRoute] Guid id)
     {
-        return Ok(_services.EmployeeService.GetEmployee(companyId, id, trackChanges: false));
+        return Ok(await _services.EmployeeService.GetEmployeeAsync(companyId, id, trackChanges: false));
     }
 
     [HttpPost]
-    public IActionResult CreateEmployeeForCompany([FromRoute] Guid companyId, [FromBody] EmployeeForCreationDto employeeForCreationDto)
+    public async Task<IActionResult> CreateEmployeeForCompany([FromRoute] Guid companyId, [FromBody] EmployeeForCreationDto employeeForCreationDto)
     {
         if (employeeForCreationDto is null)
         {
@@ -41,19 +41,19 @@ public class EmployeesController : ControllerBase
             return UnprocessableEntity(ModelState);
         }
 
-        var employeeToReturn = _services.EmployeeService.CreateEmployeeForCompany(companyId, employeeForCreationDto, false);
+        var employeeToReturn = await _services.EmployeeService.CreateEmployeeForCompanyAsync(companyId, employeeForCreationDto, false);
         return CreatedAtRoute("GetEmployeeForCompany", new { companyId, Id = employeeToReturn.Id }, employeeToReturn);
     }
 
     [HttpDelete("{id:guid}")]
-    public IActionResult DeleteEmployeeForCompany([FromRoute] Guid companyId, [FromRoute] Guid id)
+    public async Task<IActionResult> DeleteEmployeeForCompany([FromRoute] Guid companyId, [FromRoute] Guid id)
     {
-        _services.EmployeeService.DeleteEmployeeForCompany(companyId, id, trackChanges: false);
+        await _services.EmployeeService.DeleteEmployeeForCompanyAsync(companyId, id, trackChanges: false);
         return NoContent();
     }
 
     [HttpPut("{id:Guid}")]
-    public IActionResult UpdateEmployeeForCompany(Guid companyId, Guid id,
+    public async Task<IActionResult> UpdateEmployeeForCompany(Guid companyId, Guid id,
         [FromBody] EmployeeForUpdateDto employee)
     {
         if (employee is null)
@@ -66,14 +66,14 @@ public class EmployeesController : ControllerBase
             return UnprocessableEntity(ModelState);
         }
 
-        _services.EmployeeService.UpdateEmployeeForCompany(companyId, id, employee,
+        await _services.EmployeeService.UpdateEmployeeForCompanyAsync(companyId, id, employee,
             compTrackChanges: false, empTrackChanges: true);
 
         return NoContent();
     }
 
     [HttpPatch("{id:Guid}")]
-    public IActionResult PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id,
+    public async Task<IActionResult> PartiallyUpdateEmployeeForCompany(Guid companyId, Guid id,
         [FromBody] JsonPatchDocument<EmployeeForUpdateDto> patchDoc)
     {
         if (patchDoc is null)
@@ -81,7 +81,7 @@ public class EmployeesController : ControllerBase
             return BadRequest("patchDoc object sent from client is null.");
         }
 
-        var result = _services.EmployeeService.GetEmployeeForPatch(companyId, id, 
+        var result = await _services.EmployeeService.GetEmployeeForPatchAsync(companyId, id, 
             compTrackChanges: false, empTrackChanges: true);
 
         patchDoc.ApplyTo(result.employeeToPatch, ModelState);
@@ -93,7 +93,7 @@ public class EmployeesController : ControllerBase
             return UnprocessableEntity(ModelState);
         }
 
-        _services.EmployeeService.SaveChangesForPatch(result.employeeToPatch,
+        await _services.EmployeeService.SaveChangesForPatchAsync(result.employeeToPatch,
             result.employeeEntity);
 
         return NoContent();

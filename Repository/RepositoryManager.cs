@@ -19,7 +19,7 @@ public sealed class RepositoryManager : IRepositoryManager
         _employeeRepository = new Lazy<IEmployeeRepository>(() => new EmployeeRepository(_context));
     }
 
-    public async Task Save()
+    public async Task SaveAsync()
     {
         await _context.SaveChangesAsync();
     }
