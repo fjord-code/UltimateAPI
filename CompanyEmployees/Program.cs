@@ -1,4 +1,5 @@
 using CompanyEmployees.Extensions;
+using CompanyEmployees.Presentation.ActionFilters;
 using Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureSqlContext();
+builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.AddControllers(config =>
     {
         config.RespectBrowserAcceptHeader = true;
