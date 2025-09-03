@@ -1,6 +1,5 @@
 ﻿using Contracts;
 using LoggerService;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using Service;
@@ -26,7 +25,8 @@ public static class ServiceExtensions
             {
                 builder.AllowAnyOrigin()
                     .AllowAnyMethod()
-                    .AllowAnyHeader();
+                    .AllowAnyHeader()
+                    .WithExposedHeaders("X-Pagination");
             });
         });
 

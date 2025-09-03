@@ -84,12 +84,14 @@ public class EmployeeService : IEmployeeService
         return (employeeToPatch, employeeEntity);
     }
 
-    public async Task<IEnumerable<EmployeeDto>> GetEmployeesAsync(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
+    public async Task<(IEnumerable<EmployeeDto> employees, MetaData metaData)> GetEmployeesAsync(Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
     {
         await CheckIfCompanyExistsAsync(companyId, trackChanges);
 
-        var employees = await _repositoryManager.Employee.GetEmployeesAsync(companyId, employeeParameters, trackChanges);
-        return _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+        var employeesWithMetaData = await _repositoryManager.Employee.GetEmployeesAsync(companyId, employeeParameters, trackChanges);
+        var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesWithMetaData);
+
+        return (employees: employeesDto, metaData: employeesWithMetaData.MetaData);
     }
 
     public async Task SaveChangesForPatchAsync(EmployeeForUpdateDto employeeToPatch, Employee employeeEntity)
