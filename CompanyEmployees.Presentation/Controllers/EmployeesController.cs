@@ -26,6 +26,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet]
+    [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
     public async Task<IActionResult> GetEmployeesForCompany([FromRoute] Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
     {
         var pagedResult = await _services.EmployeeService.GetEmployeesAsync(companyId, employeeParameters, trackChanges: false);
