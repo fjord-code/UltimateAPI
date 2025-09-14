@@ -21,7 +21,7 @@ public class EmployeeLinks : IEmployeeLinks
 
     public LinkResponse TryGenerateLinks(IEnumerable<EmployeeDto> employeesDto, string fields, Guid companyId, HttpContext httpContext)
     {
-        var shapedEmployees = ShapeData(employeesDto);
+        var shapedEmployees = ShapeData(employeesDto, fields);
 
         if (ShouldGenerateLinks(httpContext))
         {
@@ -30,6 +30,9 @@ public class EmployeeLinks : IEmployeeLinks
 
         return ReturnShapedEmployees(shapedEmployees);
     }
+
+    private List<Entity> ShapeData(IEnumerable<EmployeeDto> employeeDtos, string fields) =>
+        _dataShaper.ShapeData(employeeDtos, fields).Select(e => e.Entity).ToList();
 
     private bool ShouldGenerateLinks(HttpContext httpContext)
     {
