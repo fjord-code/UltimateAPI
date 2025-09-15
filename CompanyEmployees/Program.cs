@@ -33,12 +33,15 @@ builder.Services.AddControllers(config =>
     .AddXmlDataContractSerializerFormatters()
     .AddCustomCSVFormatter()
     .AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
-builder.Services.AddCustomMediaTypes();
+
 builder.Services.AddAutoMapper(typeof(Program));
+
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
+
+builder.Services.AddCustomMediaTypes();
 
 WebApplication app = builder.Build();
 
