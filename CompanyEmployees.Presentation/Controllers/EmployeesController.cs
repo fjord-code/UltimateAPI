@@ -27,6 +27,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet]
+    [HttpHead]
     [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
     public async Task<IActionResult> GetEmployeesForCompany([FromRoute] Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
     {
