@@ -9,6 +9,7 @@ namespace CompanyEmployees.Presentation.Controllers;
 
 [ApiVersion("1.0")]
 [Route("api/[controller]")]
+//[ResponseCache(CacheProfileName = "120SecondsDuration")]
 [ApiController]
 public class CompaniesController : ControllerBase
 {
@@ -28,6 +29,7 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpGet("{id:guid}", Name = "CompanyById")]
+    [ResponseCache(Duration = 60)]
     public async Task<IActionResult> GetCompany(Guid id)
     {
         var companyDto = await _service.CompanyService.GetCompanyAsync(id, trackChanges: false);
