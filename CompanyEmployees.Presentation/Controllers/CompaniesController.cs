@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using CompanyEmployees.Presentation.ActionFilters;
 using CompanyEmployees.Presentation.ModelBinders;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -29,7 +30,9 @@ public class CompaniesController : ControllerBase
     }
 
     [HttpGet("{id:guid}", Name = "CompanyById")]
-    [ResponseCache(Duration = 60)]
+    //[ResponseCache(Duration = 60)]
+    [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)]
+    [HttpCacheValidation(MustRevalidate = false)]
     public async Task<IActionResult> GetCompany(Guid id)
     {
         var companyDto = await _service.CompanyService.GetCompanyAsync(id, trackChanges: false);

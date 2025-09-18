@@ -117,6 +117,16 @@ public static class ServiceExtensions
 
     public static void ConfigureHttpCacheHeaders(this IServiceCollection services)
     {
-        services.AddHttpCacheHeaders();
+        services.AddHttpCacheHeaders(
+            (expirationOptions) =>
+            {
+                expirationOptions.MaxAge = 65;
+                expirationOptions.CacheLocation = Marvin.Cache.Headers.CacheLocation.Private;
+            },
+            (validationOptions) =>
+            {
+                validationOptions.MustRevalidate = true;
+            });
+    }
     }
 }
