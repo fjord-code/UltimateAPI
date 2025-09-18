@@ -31,6 +31,8 @@ builder.Services.ConfigureResponseCaching();
 builder.Services.ConfigureHttpCacheHeaders();
 builder.Services.ConfigureRateLimitingOptions();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
 builder.Services.AddControllers(config =>
     {
         config.RespectBrowserAcceptHeader = true;
@@ -72,7 +74,7 @@ app.UseIpRateLimiting();
 app.UseCors("CorsPolicy");
 app.UseResponseCaching();
 app.UseHttpCacheHeaders();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 
