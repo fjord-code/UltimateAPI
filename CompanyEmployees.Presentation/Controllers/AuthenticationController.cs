@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CompanyEmployees.Presentation.ActionFilters;
+using Microsoft.AspNetCore.Mvc;
+using Service.Contracts;
+using Shared.DataTransferObjects;
 
 namespace CompanyEmployees.Presentation.Controllers;
 
@@ -6,10 +9,29 @@ namespace CompanyEmployees.Presentation.Controllers;
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
-    private readonly IServiceProvider _serviceManager;
+    private readonly IServiceManager _serviceManager;
 
-    public AuthenticationController(IServiceProvider serviceManager)
+    public AuthenticationController(IServiceManager serviceManager)
     {
         _serviceManager = serviceManager;
+    }
+
+    [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistration)
+    {
+        var result = await _serviceManager.AuthenticationService.RegisterUser(userForRegistration);
+
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.TryAddModelError(error.Code, error.Description);
+            }
+
+            return BadRequest(ModelState);
+        }
+
+        return Created();
     }
 }
