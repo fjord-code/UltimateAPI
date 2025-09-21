@@ -34,4 +34,17 @@ public class AuthenticationController : ControllerBase
 
         return Created();
     }
+
+    [HttpPost("login")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+    public async Task<IActionResult> Authenticate([FromBody] UserForAuthenticationDto userForAuthentication)
+    {
+        var isUserValid = await _serviceManager.AuthenticationService.ValidateUser(userForAuthentication);
+        if (!isUserValid)
+        {
+            return Unauthorized();
+        }
+
+        return Ok(new { Token = await _serviceManager.AuthenticationService.CreateToken() });
+    }
 }
