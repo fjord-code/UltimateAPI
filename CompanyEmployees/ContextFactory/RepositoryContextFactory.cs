@@ -9,7 +9,7 @@ public class RepositoryContextFactory : IDesignTimeDbContextFactory<RepositoryCo
     public RepositoryContext CreateDbContext(string[]? args = null)
     {
         var builder = new DbContextOptionsBuilder<RepositoryContext>()
-            .UseSqlite(Environment.GetEnvironmentVariable("SqliteConnectionString"),
+            .UseSqlite(Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection"),
                 options => options.MigrationsAssembly("CompanyEmployees"));
 
         return new RepositoryContext(builder.Options);
