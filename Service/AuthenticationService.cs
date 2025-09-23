@@ -40,7 +40,20 @@ internal sealed class AuthenticationService : IAuthenticationService
         var claims = await GetClaims();
         var tokenOptions = GenerateTokenOptions(signinCredentials, claims);
 
-        return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+        var refreshToken = GenerateRefreshToken();
+
+        _user.RefreshToken = refreshToken;
+
+        if (populateExpiration)
+        {
+            _user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+        }
+
+        await _userManager.UpdateAsync(_user);
+
+        var accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+        return new TokenDto(accessToken, refreshToken);
     }
 
     public async Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistration)
