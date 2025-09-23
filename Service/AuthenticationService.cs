@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Contracts;
+using Entities.Exceptions;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -156,5 +157,21 @@ internal sealed class AuthenticationService : IAuthenticationService
         }
 
         return principal;
+    }
+
+    public async Task<TokenDto> RefreshToken(TokenDto tokenPair)
+    {
+        var principal = GetPrincipalFromExpiredToken(tokenPair.AccessToken);
+
+        var user = await _userManager.FindByNameAsync(principal.Identity.Name);
+
+        if (user is null || user.RefreshToken != tokenPair.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+        {
+            throw new RefreshTokenBadRequest();
+        }
+
+        _user = user;
+
+        return await CreateToken(populateExpiration: false);
     }
 }
