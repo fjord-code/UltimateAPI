@@ -8,8 +8,15 @@ public class RepositoryContextFactory : IDesignTimeDbContextFactory<RepositoryCo
 {
     public RepositoryContext CreateDbContext(string[]? args = null)
     {
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+
         var builder = new DbContextOptionsBuilder<RepositoryContext>()
-            .UseSqlite(Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection"),
+            .UseSqlite(connectionString,
                 options => options.MigrationsAssembly("CompanyEmployees"));
 
         return new RepositoryContext(builder.Options);
