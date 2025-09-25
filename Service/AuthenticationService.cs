@@ -5,6 +5,7 @@ using Entities.Exceptions;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -20,8 +21,9 @@ internal sealed class AuthenticationService : IAuthenticationService
     private readonly ILoggerManager _loggerManager;
     private readonly IMapper _mapper;
     private readonly UserManager<User> _userManager;
-    private readonly IConfiguration _configuration;
+    private readonly IOptions<JwtConfiguration> _optionsConfiguration;
     private readonly JwtConfiguration _jwtConfiguration;
+    private readonly IConfiguration _configuration;
 
     private User? _user;
 
@@ -29,14 +31,15 @@ internal sealed class AuthenticationService : IAuthenticationService
         ILoggerManager loggerManager, 
         IMapper mapper, 
         UserManager<User> userManager, 
+        IOptions<JwtConfiguration> optionsConfiguration,
         IConfiguration configuration)
     {
         _loggerManager = loggerManager;
         _mapper = mapper;
         _userManager = userManager;
+        _optionsConfiguration = optionsConfiguration;
+        _jwtConfiguration = optionsConfiguration.Value;
         _configuration = configuration;
-        _jwtConfiguration = new JwtConfiguration();
-        _configuration.Bind(_jwtConfiguration.Section, _jwtConfiguration);
     }
 
     public async Task<TokenDto> CreateToken(bool populateExpiration)
