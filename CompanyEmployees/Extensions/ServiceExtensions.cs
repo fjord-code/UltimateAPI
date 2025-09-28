@@ -212,12 +212,29 @@ public static class ServiceExtensions
             {
                 Title = "Code Maze API",
                 Version = "v1",
+                Description = "Company Employees API by fjord-code",
+                TermsOfService = new Uri("https://example.com/terms"),
+                Contact = new OpenApiContact()
+                {
+                    Name = "John Doe",
+                    Email = "john.doe@mail.com",
+                    Url = new Uri("https://jdoe.website.com/")
+                },
+                License = new OpenApiLicense()
+                {
+                    Name = "Company Employees API LICX",
+                    Url = new Uri("https://example.com/license"),
+                }
             });
             s.SwaggerDoc("v2", new OpenApiInfo
             {
                 Title = "Code Maze API",
                 Version = "v2",
             });
+
+            var xmlFile = $"{typeof(Presentation.AssemblyReference).Assembly.GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            s.IncludeXmlComments(xmlPath);
 
             s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
             {

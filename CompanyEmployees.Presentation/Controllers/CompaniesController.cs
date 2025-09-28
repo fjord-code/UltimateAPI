@@ -3,6 +3,7 @@ using CompanyEmployees.Presentation.ActionFilters;
 using CompanyEmployees.Presentation.ModelBinders;
 using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -23,8 +24,18 @@ public class CompaniesController : ControllerBase
         _service = service;
     }
 
+    /// <summary>
+    /// Gets the list of all companies.
+    /// </summary>
+    /// <returns>A list with all companies.</returns>
+    /// <response code="200">Returns a list of all companies.</response>
+    /// <response code="401">No authorization.</response>
+    /// <response code="403">You have no rights to access it.</response>
     [HttpGet(Name = "GetCompanies")]
     [Authorize(Roles = "Manager")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetCompanies()
     {
         var companies = await _service.CompanyService.GetAllCompaniesAsync(trackChanges: false);
