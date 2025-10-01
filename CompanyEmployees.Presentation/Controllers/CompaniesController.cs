@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using CompanyEmployees.Presentation.ActionFilters;
 using CompanyEmployees.Presentation.ModelBinders;
+using Entities.Responses;
 using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +16,7 @@ namespace CompanyEmployees.Presentation.Controllers;
 //[ResponseCache(CacheProfileName = "120SecondsDuration")]
 [ApiController]
 [ApiExplorerSettings(GroupName = "v1")]
-public class CompaniesController : ControllerBase
+public class CompaniesController : ApiControllerBase
 {
     private readonly IServiceManager _service;
 
@@ -38,9 +39,13 @@ public class CompaniesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetCompanies()
     {
-        var companies = await _service.CompanyService.GetAllCompaniesAsync(trackChanges: false);
+        var baseResponse = await _service.CompanyService.GetAllCompaniesAsync(trackChanges: false);
 
-        return Ok(companies);
+        return baseResponse switch
+        {
+            ApiOkResponse<IEnumerable<CompanyDto>> apiOkResponse => Ok(apiOkResponse.Result),
+            _ => ProcessError(baseResponse)
+        };
     }
 
     [HttpGet("{id:guid}", Name = "CompanyById")]
@@ -49,8 +54,13 @@ public class CompaniesController : ControllerBase
     [HttpCacheValidation(MustRevalidate = false)]
     public async Task<IActionResult> GetCompany(Guid id)
     {
-        var companyDto = await _service.CompanyService.GetCompanyAsync(id, trackChanges: false);
-        return Ok(companyDto);
+        var baseResponse = await _service.CompanyService.GetCompanyAsync(id, trackChanges: false);
+
+        return baseResponse switch
+        {
+            ApiOkResponse<CompanyDto> apiOkResponse => Ok(apiOkResponse.Result),
+            _ => ProcessError(baseResponse)
+        };
     }
 
     [HttpPost(Name = "CreateCompany")]

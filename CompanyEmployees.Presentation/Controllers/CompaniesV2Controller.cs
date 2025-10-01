@@ -22,8 +22,6 @@ public class CompaniesV2Controller : ControllerBase
     {
         var companies = await _serviceManager.CompanyService.GetAllCompaniesAsync(trackChanges: false);
 
-        var companiesV2 = companies.Select(x => $"{x.Name} V2");
-
-        return Ok(companiesV2);
+        return Ok(companies);
     }
 }
